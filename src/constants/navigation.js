@@ -1,14 +1,17 @@
+/**
+ * Los enlaces de navegación guardan una `key` (no el texto) porque la
+ * etiqueta visible depende del idioma activo (ver src/i18n/translations.js
+ * y src/context/LanguageContext.jsx).
+ */
 export const NAV_LINKS = [
-  { href: "#quienes-somos", label: "Quiénes somos" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "#quienes-somos", key: "about" },
+  { href: "#servicios", key: "services" },
+  { href: "#contacto", key: "contact" },
 ];
 
 export const FOOTER_LINKS = [
-  { href: "#inicio", label: "Inicio" },
-  { href: "#quienes-somos", label: "Quiénes somos" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "#inicio", key: "home" },
+  { href: "#quienes-somos", key: "about" },
+  { href: "#servicios", key: "services" },
+  { href: "#contacto", key: "contact" },
 ];
-
-export const SOCIAL_LINKS = ["Instagram", "Behance", "LinkedIn"];

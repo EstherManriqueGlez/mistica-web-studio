@@ -1,7 +1,10 @@
 import FadeUp from "../common/FadeUp";
 import { COLORS, FONT_DISPLAY } from "../../constants/colors";
+import { useLanguage } from "../../context/useLanguage";
 
 export default function QuienesSomos() {
+  const { t } = useLanguage();
+
   return (
     <section
       id="quienes-somos"
@@ -14,18 +17,18 @@ export default function QuienesSomos() {
             className="uppercase text-xs tracking-[0.25em] font-medium"
             style={{ color: COLORS.turquoiseDeep }}
           >
-            Quiénes somos
+            {t.about.eyebrow}
           </span>
           <h2
             className="text-3xl md:text-[2.7rem] leading-[1.15] mt-4"
             style={{ fontFamily: FONT_DISPLAY, color: COLORS.pine }}
           >
-            Dos fuerzas, <br /> un mismo estudio.
+            {t.about.titleLine1} <br /> {t.about.titleLine2}
           </h2>
         </FadeUp>
 
         <FadeUp
-          className="space-y-6 text-[15px] md:text-base leading-relaxed"
+          className="space-y-6 text-base leading-relaxed"
           style={{ color: COLORS.pine, opacity: 0.88 }}
         >
           <p>
@@ -37,11 +40,9 @@ export default function QuienesSomos() {
                 color: COLORS.gold,
               }}
             >
-              Mística
+              {t.about.misticaWord}
             </strong>{" "}
-            es lo que pasa antes del código: la intuición que lee a tu
-            audiencia, la lectura certera de lo que tu marca necesita decir sin
-            decirlo. Es la mirada que conecta, que va más allá de lo evidente.
+            {t.about.misticaText}
           </p>
           <p>
             <strong
@@ -52,18 +53,11 @@ export default function QuienesSomos() {
                 color: COLORS.pine,
               }}
             >
-              Web Studio
+              {t.about.webStudioWord}
             </strong>{" "}
-            es la estructura que sostiene esa intuición: orden, procesos claros
-            y la capacidad técnica de construir universos visuales completos,
-            desde el logo hasta la última línea de código.
+            {t.about.webStudioText}
           </p>
-          <p>
-            Ninguna marca se transforma solo con estética ni solo con
-            estrategia. Nosotras trabajamos en ese punto exacto donde ambas se
-            encuentran — y ahí es donde tu negocio empieza a verse como
-            realmente es.
-          </p>
+          <p>{t.about.closing}</p>
         </FadeUp>
       </div>
     </section>

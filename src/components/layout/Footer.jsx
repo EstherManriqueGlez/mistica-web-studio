@@ -1,13 +1,16 @@
 import { COLORS, FONT_DISPLAY, FONT_SCRIPT } from "../../constants/colors";
-import { FOOTER_LINKS, SOCIAL_LINKS } from "../../constants/navigation";
+import { FOOTER_LINKS } from "../../constants/navigation";
+import { useLanguage } from "../../context/useLanguage";
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer
       className="px-6 pt-16 pb-10"
       style={{ background: COLORS.pineDeep, color: COLORS.cream }}
     >
-      <div className="max-w-6xl mx-auto grid md:grid-cols-4 gap-10 md:gap-8">
+      <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 md:gap-8 lg:justify-between">
         <div>
           <div className="flex items-center gap-1.5 mb-4">
             <span
@@ -29,63 +32,64 @@ export default function Footer() {
               Studio
             </span>
           </div>
-          <p className="text-sm opacity-70 max-w-xs leading-relaxed">
-            Estrategia con alma. Diseño de marca, web y piezas físicas para
-            negocios que quieren verse como realmente son.
+          <p className="text-base opacity-70 max-w-xs leading-relaxed">
+            {t.footer.tagline}
           </p>
         </div>
 
-        <div>
-          <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-4">
-            Navegación
-          </h4>
-          <ul className="space-y-2.5 text-sm">
-            {FOOTER_LINKS.map((link) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="mws-link opacity-85 hover:opacity-100"
-                >
-                  {link.label}
+        <div className="grid grid-cols-2 gap-10 md:gap-8">
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-4">
+              {t.footer.navHeading}
+            </h2>
+            <nav aria-label={t.footer.navHeading}>
+              <ul className="space-y-2.5 text-base">
+                {FOOTER_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      className="mws-link opacity-85 hover:opacity-100"
+                    >
+                      {t.nav[link.key]}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-4">
+              {t.footer.contactHeading}
+            </h2>
+            <ul className="space-y-2.5 text-base opacity-85">
+              <li>
+                <a className="mws-link" href="mailto:misticawebstudio@gmail.com">
+                  misticawebstudio@gmail.com
                 </a>
               </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-4">
-            Redes
-          </h4>
-          <ul className="space-y-2.5 text-sm">
-            {SOCIAL_LINKS.map((red) => (
-              <li key={red}>
-                <a href="#" className="mws-link opacity-85 hover:opacity-100">
-                  {red}
+              <li>
+                <a className="mws-link" href="tel:+525528529983">
+                  +52 55 285 29983
                 </a>
               </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-xs uppercase tracking-[0.2em] opacity-60 mb-4">
-            Contacto
-          </h4>
-          <ul className="space-y-2.5 text-sm opacity-85">
-            <li>hola@misticawebstudio.com</li>
-            <li>+52 55 0000 0000</li>
-            <li>Ciudad de México, México</li>
-          </ul>
+              <li>
+                <a className="mws-link" href="tel:+529935907670">
+                  +52 99 359 07670
+                </a>
+              </li>
+              <li>{t.footer.addressLine}</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div
-        className="max-w-6xl mx-auto mt-14 pt-6 border-t flex flex-col sm:flex-row justify-between gap-3 text-xs opacity-55"
+        className="max-w-6xl mx-auto mt-14 pt-6 border-t flex flex-col sm:flex-row justify-between gap-3 text-sm opacity-70"
         style={{ borderColor: "rgba(247,234,214,0.15)" }}
       >
-        <span>© 2026 Mística Web Studio. Todos los derechos reservados.</span>
-        <span>La magia de ver, la ciencia de ejecutar.</span>
+        <span>{t.footer.rights}</span>
+        <span>{t.footer.motto}</span>
       </div>
     </footer>
   );

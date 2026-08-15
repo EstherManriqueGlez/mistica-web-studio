@@ -130,6 +130,21 @@ body {
   background: rgba(247, 234, 214, 0.82);
 }
 
+/* Foco visible consistente para teclado (WCAG 2.4.7) en enlaces y
+   botones que no definen su propio estilo de foco inline. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #bd8a34;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Texto seleccionable siempre legible, incluso sobre fondos oscuros */
+::selection {
+  background: #bd8a34;
+  color: #f7ead6;
+}
+
 /* Respeta accesibilidad: reduce animaciones si el usuario lo pide */
 @media (prefers-reduced-motion: reduce) {
   .mws-thread,

@@ -16,6 +16,8 @@ export default function Sparkle({
       height={size}
       viewBox="0 0 40 40"
       fill="none"
+      aria-hidden="true"
+      focusable="false"
       style={{ animation: `mws-twinkle 3.2s ease-in-out ${delay}s infinite` }}
     >
       <path

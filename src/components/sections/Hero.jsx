@@ -1,7 +1,10 @@
 import Sparkle from "../common/Sparkle";
 import { COLORS, FONT_DISPLAY, FONT_SCRIPT } from "../../constants/colors";
+import { useLanguage } from "../../context/useLanguage";
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section
       id="inicio"
@@ -31,6 +34,7 @@ export default function Hero() {
         viewBox="0 0 1200 700"
         preserveAspectRatio="none"
         aria-hidden="true"
+        focusable="false"
       >
         <path
           className="mws-thread"
@@ -48,42 +52,52 @@ export default function Hero() {
           className="text-2xl md:text-3xl mb-4"
           style={{ fontFamily: FONT_SCRIPT, color: COLORS.turquoiseDeep }}
         >
-          Somos estrategia con alma
+          {t.hero.eyebrow}
         </p>
 
         <h1
           className="text-[2.6rem] leading-[1.08] md:text-7xl md:leading-[1.05] font-medium tracking-tight"
           style={{ fontFamily: FONT_DISPLAY, color: COLORS.pine }}
         >
-          Transformamos tu marca
+          {t.hero.titleLine1}
           <br className="hidden md:block" />
-          en <span style={{ color: COLORS.gold }}>un universo</span> que vende
+          {t.hero.titleConnector}{" "}
+          <span style={{ color: COLORS.goldText }}>
+            {t.hero.titleHighlight}
+          </span>{" "}
+          {t.hero.titleSuffix}
         </h1>
 
         <p
           className="mt-8 max-w-xl mx-auto text-base md:text-lg leading-relaxed"
           style={{ color: COLORS.pine, opacity: 0.82 }}
         >
-          La magia de ver, la ciencia de ejecutar. Diseño de marca, sitios web
-          de alta conversión y piezas físicas que hacen que tu negocio se
-          sienta, por fin, completamente tuyo.
+          {t.hero.paragraph}
         </p>
 
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a
             href="#contacto"
-            className="mws-btn-primary rounded-full px-9 py-4 font-medium text-[15px] tracking-wide"
-            style={{ background: COLORS.pine, color: COLORS.cream }}
+            className="mws-btn-primary rounded-full px-9 py-4 font-medium text-[15px] tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{
+              background: COLORS.pine,
+              color: COLORS.cream,
+              outlineColor: COLORS.gold,
+            }}
           >
-            Quiero mi diagnóstico de marca
+            {t.hero.ctaPrimary}
           </a>
 
           <a
             href="#servicios"
-            className="mws-btn-ghost rounded-full px-9 py-4 font-medium text-[15px] tracking-wide"
-            style={{ border: `1.5px solid ${COLORS.pine}`, color: COLORS.pine }}
+            className="mws-btn-ghost rounded-full px-9 py-4 font-medium hover:bg-pine hover:text-cream text-[15px] tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{
+              border: `1.5px solid ${COLORS.pine}`,
+              color: COLORS.pine,
+              outlineColor: COLORS.gold,
+            }}
           >
-            Ver servicios
+            {t.hero.ctaSecondary}
           </a>
         </div>
       </div>

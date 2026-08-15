@@ -1,8 +1,10 @@
 import { COLORS, FONT_DISPLAY } from "../../constants/colors";
 
 /**
- * Tarjeta individual de servicio. Recibe los datos de un item
- * del array SERVICES (constants/services.js) como props.
+ * Tarjeta individual de servicio. `title`/`items` vienen de la traducción
+ * activa (src/i18n/translations.js -> services.items) e `iconColor`/`Icon`
+ * de SERVICE_ICONS (constants/services.js); Services.jsx combina ambos
+ * por índice antes de pasarlos aquí como props.
  */
 export default function ServiceCard({ title, iconColor, Icon, items }) {
   return (
@@ -15,6 +17,8 @@ export default function ServiceCard({ title, iconColor, Icon, items }) {
         height="34"
         viewBox="0 0 24 24"
         fill="none"
+        aria-hidden="true"
+        focusable="false"
         style={{ color: iconColor }}
       >
         <Icon />
@@ -26,7 +30,7 @@ export default function ServiceCard({ title, iconColor, Icon, items }) {
         {title}
       </h3>
       <ul
-        className="text-sm leading-relaxed space-y-1.5"
+        className="text-base leading-relaxed space-y-1.5"
         style={{ color: COLORS.pine, opacity: 0.8 }}
       >
         {items.map((item) => (
