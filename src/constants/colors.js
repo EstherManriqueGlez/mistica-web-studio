@@ -5,15 +5,20 @@ export const COLORS = {
   pineDeep: "#0B2624",
   gold: "#BD8A34",
   goldLight: "#D8AE66",
-  // Variante oscurecida de `gold` para usarse como texto/ícono sobre fondos
-  // claros (cream/creamSoft). El `gold` original da ~2.6:1 de contraste
-  // sobre cream (no cumple WCAG AA ni siquiera para texto grande);
-  // `goldText` da ~4.6:1. Mantén `gold` para fondos oscuros y decoraciones.
+  // Darkened variant of `gold`, for text/icons on light backgrounds
+  // (cream/creamSoft). Plain `gold` only reaches ~2.6:1 contrast on
+  // cream (fails WCAG AA even for large text); `goldText` reaches ~4.6:1.
+  // Keep `gold` for dark backgrounds and decoration.
   goldText: "#886325",
   turquoise: "#2E93A6",
   turquoiseDeep: "#22707F",
-  // Color de estado de error (p. ej. formulario de contacto) sobre fondos
-  // oscuros como `pine`. Contraste ~6:1 sobre pine, cumple WCAG AA.
+  // Light variant of `turquoise`, for text on very dark or variable
+  // backgrounds (e.g. the Hero video scrim): plain `turquoise` drops to
+  // ~2.7:1 in the worst case (a light video frame), `turquoiseLight`
+  // holds ~4.6:1+.
+  turquoiseLight: "#60C0D3",
+  // Error-state color (e.g. the contact form) on dark backgrounds like
+  // `pine`. ~6:1 contrast on pine, meets WCAG AA.
   errorLight: "#F2A65A",
 };
 

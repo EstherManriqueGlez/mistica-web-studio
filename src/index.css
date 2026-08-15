@@ -5,24 +5,14 @@ body {
   color: #123b37;
   font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
+  /* Safety net: some sections intentionally let a decorative element
+     (like the M in "who we are") bleed a few pixels past its
+     container. This keeps that from causing a page-wide horizontal
+     scrollbar. */
+  overflow-x: hidden;
 }
 
-/* Animación de aparición (fade-up) usada por el componente FadeUp */
-@keyframes mws-fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.mws-fade-up {
-  animation: mws-fade-up 0.8s ease both;
-}
-
-/* Destello (sparkle) del Hero */
+/* Sparkle (Hero, intro curtain, etc.) */
 @keyframes mws-twinkle {
   0%,
   100% {
@@ -35,30 +25,19 @@ body {
   }
 }
 
-/* Hilo místico animado del Hero */
-@keyframes mws-draw {
-  to {
-    stroke-dashoffset: 0;
+/* Small arrow inviting the user to scroll (intro curtain, hero) */
+@keyframes mws-bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(6px);
   }
 }
-.mws-thread {
-  stroke-dasharray: 1400;
-  stroke-dashoffset: 1400;
-  animation: mws-draw 2.6s cubic-bezier(0.65, 0.05, 0.36, 1) forwards;
-}
 
-/* Tarjetas de servicio */
-.mws-card {
-  transition:
-    transform 0.45s cubic-bezier(0.2, 0.7, 0.3, 1),
-    box-shadow 0.45s ease,
-    border-color 0.45s ease;
-}
-.mws-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 24px 48px -20px rgba(18, 59, 55, 0.28);
-  border-color: #bd8a34; /* gold — debe coincidir con COLORS.gold en constants/colors.js */
-}
+/* Service cards: no hover effect, by design (see ServiceCard.jsx) —
+   still and evenly sized in height. */
 .mws-card li {
   position: relative;
   padding-left: 14px;
@@ -74,7 +53,7 @@ body {
   background: #bd8a34;
 }
 
-/* Links con subrayado animado (nav y footer) */
+/* Links with an animated underline (nav and footer) */
 .mws-link {
   position: relative;
 }
@@ -92,7 +71,7 @@ body {
   width: 100%;
 }
 
-/* Botones */
+/* Buttons */
 .mws-btn-primary {
   transition:
     background 0.35s ease,
@@ -119,19 +98,13 @@ body {
   transform: translateY(-2px);
 }
 
-/* Formulario de contacto */
+/* Contact form */
 .mws-input::placeholder {
   color: rgba(247, 234, 214, 0.5);
 }
 
-/* Header con efecto blur al hacer scroll */
-.mws-nav-blur {
-  backdrop-filter: blur(10px);
-  background: rgba(247, 234, 214, 0.82);
-}
-
-/* Foco visible consistente para teclado (WCAG 2.4.7) en enlaces y
-   botones que no definen su propio estilo de foco inline. */
+/* Consistent visible focus ring for keyboard users (WCAG 2.4.7) on
+   links and buttons that don't define their own inline focus style. */
 a:focus-visible,
 button:focus-visible {
   outline: 2px solid #bd8a34;
@@ -139,17 +112,16 @@ button:focus-visible {
   border-radius: 4px;
 }
 
-/* Texto seleccionable siempre legible, incluso sobre fondos oscuros */
+/* Selected text stays legible even on dark backgrounds */
 ::selection {
   background: #bd8a34;
   color: #f7ead6;
 }
 
-/* Respeta accesibilidad: reduce animaciones si el usuario lo pide */
+/* Accessibility: reduce animation if the user has requested it */
 @media (prefers-reduced-motion: reduce) {
-  .mws-thread,
-  .mws-fade-up,
-  [style*="mws-twinkle"] {
+  [style*="mws-twinkle"],
+  [style*="mws-bounce"] {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

@@ -1,7 +1,7 @@
 /**
- * Íconos de línea usados en las tarjetas de Servicios.
- * Cada uno solo devuelve el contenido interno (paths/circles);
- * el <svg> que los envuelve vive en ServiceCard.jsx.
+ * Line icons used in the Services cards.
+ * Each one only returns the inner content (paths/circles);
+ * the wrapping <svg> lives in ServiceCard.jsx.
  */
 
 export function DesignWebIcon() {

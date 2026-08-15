@@ -1,22 +1,76 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { COLORS } from "../../constants/colors";
 import { NAV_LINKS } from "../../constants/navigation";
 import { useLanguage } from "../../context/useLanguage";
+import { useBodyScrollLock } from "../../hooks/useBodyScrollLock";
 import LanguageSwitch from "../common/LanguageSwitch";
 import logo from "../../assets/mistica-web-studio-logo.png";
+
+// Below this scroll position, the header always stays visible regardless
+// of scroll direction (avoids "peekaboo" flicker right at the top).
+const REVEAL_THRESHOLD = 96;
 
 export default function Header() {
   const { t } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  useBodyScrollLock(menuOpen);
 
   function closeMenu() {
     setMenuOpen(false);
   }
 
+  // If they open the menu while the header is hidden (scrolled down),
+  // bring it back immediately — handled right in the click handler
+  // rather than a separate effect, to avoid chaining renders.
+  function toggleMenu() {
+    setMenuOpen((open) => {
+      const next = !open;
+      if (next) setHidden(false);
+      return next;
+    });
+  }
+
+  // "Peekaboo" header: hides on scroll down, reappears on scroll up.
+  // Paused (always visible) while the mobile menu is open.
+  useEffect(() => {
+    lastScrollY.current = window.scrollY;
+
+    function handleScroll() {
+      if (ticking.current) return;
+      ticking.current = true;
+
+      requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        const delta = currentY - lastScrollY.current;
+
+        if (menuOpen || currentY < REVEAL_THRESHOLD) {
+          setHidden(false);
+        } else if (delta > 4) {
+          setHidden(true);
+        } else if (delta < -4) {
+          setHidden(false);
+        }
+
+        lastScrollY.current = currentY;
+        ticking.current = false;
+      });
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [menuOpen]);
+
   return (
-    <header
-      className="fixed top-0 inset-x-0 z-50 mws-nav-blur"
-      style={{ borderBottom: "1px solid rgba(18,59,55,0.1)" }}
+    <motion.header
+      className="fixed top-0 inset-x-0 z-50"
+      style={{ background: COLORS.cream }}
+      animate={{ y: hidden ? "-100%" : "0%" }}
+      transition={{ duration: 0.4, ease: [0.65, 0.05, 0.36, 1] }}
     >
       <div className="max-w-6xl mx-auto px-6 md:px-10 h-20 flex items-center justify-between">
         <a href="#inicio" className="flex items-center gap-2 shrink-0">
@@ -60,7 +114,7 @@ export default function Header() {
           </a>
           <button
             type="button"
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={toggleMenu}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav"
             aria-label={menuOpen ? t.nav.closeMenu : t.nav.openMenu}
@@ -107,6 +161,6 @@ export default function Header() {
           </a>
         ))}
       </nav>
-    </header>
+    </motion.header>
   );
 }

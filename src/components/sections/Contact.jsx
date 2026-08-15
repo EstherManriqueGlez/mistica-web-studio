@@ -1,20 +1,36 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
-import FadeUp from "../common/FadeUp";
+import { motion } from "framer-motion";
+import Sparkle from "../common/Sparkle";
 import { COLORS, FONT_DISPLAY, FONT_SCRIPT } from "../../constants/colors";
 import { useLanguage } from "../../context/useLanguage";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import { useScrollDownReveal } from "../../hooks/useScrollDownReveal";
+import { initReveals } from "../../lib/reveal";
+
+// Sparkles on either side of the form — the same ones from the Hero/intro,
+// here they fade in on scroll and then twinkle on their own (Sparkle
+// already carries its own continuous animation via CSS).
+const SIDE_SPARKLES = [
+  { className: "left-[4%] top-[18%] w-5 h-5 md:w-7 md:h-7", size: 28, color: "goldLight", delay: 0 },
+  { className: "left-[9%] top-[55%] w-4 h-4 md:w-5 md:h-5", size: 20, color: "turquoiseLight", delay: 0.9 },
+  { className: "left-[3%] bottom-[12%] w-4 h-4", size: 18, color: "gold", delay: 1.6 },
+  { className: "right-[4%] top-[22%] w-5 h-5 md:w-7 md:h-7", size: 28, color: "turquoiseLight", delay: 0.4 },
+  { className: "right-[8%] top-[58%] w-4 h-4 md:w-6 md:h-6", size: 22, color: "goldLight", delay: 1.2 },
+  { className: "right-[3%] bottom-[15%] w-4 h-4", size: 18, color: "gold", delay: 1.9 },
+];
 
 const WEB3FORMS_ACCESS_KEY = "db4caf89-52ec-48b0-bdd4-f1b109841649";
-// Sitekey público de Web3Forms para el plan gratuito de hCaptcha (no es
-// secreto, así lo documenta Web3Forms). En un plan de pago se reemplaza
-// por un sitekey propio.
+// Public Web3Forms sitekey for the free hCaptcha plan (not a secret,
+// Web3Forms documents it as such). On a paid plan this gets replaced
+// with a dedicated sitekey.
 const HCAPTCHA_SITEKEY = "50b2fe65-b00b-4b9e-ad62-3ba471098be2";
 
 const FIELDS = ["name", "email", "phone", "message"];
 
 /**
- * Valida un campo del formulario y regresa el mensaje de error traducido
- * correspondiente, o "" si el valor es válido.
+ * Validates a form field and returns the corresponding translated error
+ * message, or "" if the value is valid.
  */
 function validateField(field, rawValue, t) {
   const value = rawValue.trim();
@@ -55,6 +71,7 @@ const emptyState = { name: "", email: "", phone: "", message: "" };
 
 export default function Contacto() {
   const { t } = useLanguage();
+  const prefersReducedMotion = usePrefersReducedMotion();
   // idle | invalid | sending | success | error
   const [formStatus, setFormStatus] = useState("idle");
   const [errors, setErrors] = useState(emptyState);
@@ -67,7 +84,38 @@ export default function Contacto() {
     message: false,
   });
   const captchaRef = useRef(null);
+  const sectionRef = useRef(null);
+  const contentRef = useRef(null);
   const isSending = formStatus === "sending";
+
+  // "Bottom to top" via GSAP + ScrollTrigger through src/lib/reveal.js
+  // (same generic data-attributes as Services.jsx): the form block enters
+  // from below as soon as the section is reached.
+  useEffect(() => {
+    if (prefersReducedMotion) return undefined;
+    const cleanup = initReveals(sectionRef.current);
+    return cleanup;
+  }, [prefersReducedMotion]);
+
+  // The section starts cream; on scroll down, a pine curtain sweeps in
+  // left to right and settles covering the whole section — the same
+  // pine look it always had. Same `clip-path` technique and the same
+  // 1400ms timing as Services.jsx's curtain (just a horizontal sweep
+  // instead of vertical), so the two read as one consistent effect while
+  // scrolling through the page. Scroll-down-only and one-way, via
+  // useScrollDownReveal: scrolling back up never re-hides it once it has
+  // dropped, and it never triggers early just by scrolling up into view.
+  // Reduced motion skips straight to the pine end state.
+  const scrollRevealed = useScrollDownReveal(sectionRef, { amount: 0.35 });
+  const revealed = prefersReducedMotion || scrollRevealed;
+  const textColor = revealed ? COLORS.cream : COLORS.pine;
+  const eyebrowColor = revealed ? COLORS.goldLight : COLORS.goldText;
+  const textTransitionClass = prefersReducedMotion
+    ? ""
+    : "transition-colors duration-[1400ms] ease-in-out";
+  const curtainTransitionClass = prefersReducedMotion
+    ? ""
+    : "transition-[clip-path] duration-[1400ms] ease-in-out";
 
   function handleBlur(field) {
     return (event) => {
@@ -81,8 +129,8 @@ export default function Contacto() {
 
   function handleChange(field) {
     return (event) => {
-      // Solo revalidamos en vivo una vez que el campo ya fue tocado, para
-      // no marcar error mientras la persona todavía está escribiendo.
+      // Only revalidate live once the field has already been touched, so
+      // we don't flag an error while the person is still typing.
       setErrors((prev) =>
         touched[field]
           ? { ...prev, [field]: validateField(field, event.target.value, t) }
@@ -113,10 +161,10 @@ export default function Contacto() {
       return;
     }
 
-    // El formulario tiene hCaptcha activado en Web3Forms: sin un token
-    // válido, la API lo rechaza ("hCaptcha Token is mandatory for this
-    // form"). El token llega por el callback onVerify del widget de
-    // @hcaptcha/react-hcaptcha, no como un campo del <form> del DOM.
+    // The form has hCaptcha enabled on Web3Forms: without a valid token,
+    // the API rejects it ("hCaptcha Token is mandatory for this form").
+    // The token arrives via the onVerify callback of the
+    // @hcaptcha/react-hcaptcha widget, not as a DOM <form> field.
     if (!captchaToken) {
       setCaptchaError(t.contact.errors.captchaRequired);
       setFormStatus("invalid");
@@ -143,18 +191,18 @@ export default function Contacto() {
         setErrors(emptyState);
         setCaptchaError("");
         setTouched({ name: false, email: false, phone: false, message: false });
-        // El token de hCaptcha es de un solo uso; reseteamos el widget
-        // para que quede listo si la persona quiere mandar otro mensaje.
+        // The hCaptcha token is single-use; reset the widget so it's
+        // ready if the person wants to send another message.
         captchaRef.current?.resetCaptcha();
         setCaptchaToken(null);
       } else {
-        // Web3Forms manda un mensaje útil en `data.message` (p. ej. clave
-        // inválida, límite de envíos, etc). Lo dejamos en consola para
-        // poder depurar sin exponer detalles internos en la UI.
+        // Web3Forms sends a useful message in `data.message` (e.g.
+        // invalid key, submission limit, etc). We log it to the console
+        // so we can debug without exposing internal details in the UI.
         console.error("Web3Forms submission failed:", data);
         setFormStatus("error");
-        // El token ya se usó (o fue rechazado); hay que resolver el
-        // captcha de nuevo antes de reintentar.
+        // The token was already used (or got rejected); the captcha
+        // needs to be solved again before retrying.
         captchaRef.current?.resetCaptcha();
         setCaptchaToken(null);
       }
@@ -178,8 +226,12 @@ export default function Contacto() {
             : "";
 
   const fieldStyle = (field) => ({
-    borderColor: errors[field] ? COLORS.errorLight : "rgba(247,234,214,0.35)",
-    color: COLORS.cream,
+    borderColor: errors[field]
+      ? COLORS.errorLight
+      : revealed
+        ? "rgba(247,234,214,0.35)"
+        : "rgba(18,59,55,0.35)",
+    color: textColor,
     outlineColor: COLORS.goldLight,
   });
 
@@ -189,13 +241,52 @@ export default function Contacto() {
   return (
     <section
       id="contacto"
-      className="px-6 py-24 md:py-28"
-      style={{ background: COLORS.pine, color: COLORS.cream }}
+      ref={sectionRef}
+      className="relative overflow-hidden px-6 py-24 md:py-28"
+      style={{ background: COLORS.cream }}
     >
-      <FadeUp className="max-w-2xl mx-auto text-center">
+      {/* Pine curtain layer: clipped left to right (same 1400ms timing
+          as Services.jsx's top-to-bottom one, just a horizontal sweep
+          instead). `revealed` false -> collapsed to nothing at the left
+          edge (cream showing); true -> fully open, covering the section
+          like a curtain sliding in from the left. The insets go just
+          past 0%/100% (100.5%/-0.5%) instead of landing exactly on them
+          — right on 100% some browsers round the "fully collapsed"
+          clip region to a hairline of visible pine at the edge instead
+          of truly zero width, which showed up as a thin green line. */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 ${curtainTransitionClass}`}
+        style={{
+          background: COLORS.pine,
+          clipPath: revealed ? "inset(0 -0.5% 0 -0.5%)" : "inset(0 100.5% 0 -0.5%)",
+        }}
+      />
+
+      {!prefersReducedMotion &&
+        SIDE_SPARKLES.map((s, i) => (
+          <motion.div
+            key={i}
+            className={`absolute z-0 ${s.className}`}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, margin: "-10% 0px -10% 0px" }}
+            transition={{ duration: 0.8, delay: 0.15 * i }}
+          >
+            <Sparkle size={s.size} color={COLORS[s.color]} delay={s.delay} />
+          </motion.div>
+        ))}
+
+      <div
+        ref={contentRef}
+        data-reveal
+        data-reveal-direction="down"
+        className={`relative z-10 max-w-2xl mx-auto text-center ${textTransitionClass}`}
+        style={{ color: textColor }}
+      >
         <span
-          className="text-2xl md:text-3xl"
-          style={{ fontFamily: FONT_SCRIPT, color: COLORS.goldLight }}
+          className={`text-2xl md:text-3xl ${textTransitionClass}`}
+          style={{ fontFamily: FONT_SCRIPT, color: eyebrowColor }}
         >
           {t.contact.eyebrow}
         </span>
@@ -214,10 +305,10 @@ export default function Contacto() {
           onSubmit={handleSubmit}
           noValidate
         >
-          {/* Campos ocultos para Web3Forms: asunto del correo y trampa
-              anti-spam (botcheck). El botcheck debe llegar vacío; los bots
-              que autocompletan todos los campos lo llenan y Web3Forms
-              descarta el envío. */}
+          {/* Hidden fields for Web3Forms: email subject and an anti-spam
+              honeypot (botcheck). The botcheck must arrive empty; bots
+              that autofill every field fill it in, and Web3Forms
+              discards the submission. */}
           <input type="hidden" name="subject" value="Nuevo mensaje desde misticawebstudio.com" />
           <input type="hidden" name="from_name" value="Mística Web Studio" />
           <input
@@ -370,12 +461,12 @@ export default function Contacto() {
           </div>
 
           <div>
-            {/* El formulario tiene hCaptcha activado en el dashboard de
-                Web3Forms. Usamos el componente oficial de React (en vez
-                del snippet <div class="h-captcha"> + script embebido) porque
-                ese approach se basa en escanear el DOM una sola vez al
-                cargar la página, y en una SPA el formulario todavía no
-                existe en ese momento: el checkbox nunca se dibujaba. */}
+            {/* The form has hCaptcha enabled in the Web3Forms dashboard.
+                We use the official React component (instead of the
+                <div class="h-captcha"> + embedded script snippet)
+                because that approach relies on scanning the DOM once on
+                page load, and in an SPA the form doesn't exist yet at
+                that point: the checkbox would never render. */}
             <HCaptcha
               ref={captchaRef}
               sitekey={HCAPTCHA_SITEKEY}
@@ -428,7 +519,7 @@ export default function Contacto() {
             {statusMessage}
           </p>
         </form>
-      </FadeUp>
+      </div>
     </section>
   );
 }

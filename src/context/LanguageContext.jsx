@@ -14,17 +14,17 @@ function getInitialLanguage() {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (stored && LANGUAGES.includes(stored)) return stored;
   } catch {
-    // localStorage puede no estar disponible (modo privado, etc.)
+    // localStorage may not be available (private browsing, etc.)
   }
   return DEFAULT_LANGUAGE;
 }
 
 /**
- * Provee el idioma activo (por defecto inglés) y las traducciones a toda
- * la app. Sincroniza <html lang>, el <title> y la meta description para
- * que el cambio de idioma también sea correcto de cara a SEO/accesibilidad.
- * El hook de consumo (useLanguage) vive en ./useLanguage.js para que este
- * archivo solo exporte el componente Provider (requisito de Fast Refresh).
+ * Provides the active language (English by default) and translations to
+ * the whole app. Syncs <html lang>, the <title>, and the meta description
+ * so a language change is also correct for SEO/accessibility. The
+ * consumer hook (useLanguage) lives in ./useLanguage.js so this file
+ * only exports the Provider component (Fast Refresh requirement).
  */
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState(getInitialLanguage);
@@ -36,7 +36,7 @@ export function LanguageProvider({ children }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, lang);
     } catch {
-      // ignorar si no hay storage disponible
+      // ignore if storage isn't available
     }
 
     document.title = t.meta.title;

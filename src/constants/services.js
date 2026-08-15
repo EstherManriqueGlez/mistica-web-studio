@@ -8,10 +8,13 @@ import {
 } from "../components/icons/ServiceIcons";
 
 /**
- * Metadatos visuales de cada tarjeta de servicio (icono y color).
- * El título y la lista de puntos viven en las traducciones
- * (src/i18n/translations.js -> services.items) y se combinan con este
- * array por índice en Services.jsx, ya que el texto depende del idioma.
+ * Visual metadata for each service card (icon and color).
+ * The title and bullet list live in translations
+ * (src/i18n/translations.js -> services.items) and get merged with this
+ * array by index in Services.jsx, since the text is language-dependent.
+ *
+ * Cards are static (soft cream background, see ServiceCard.jsx), so each
+ * icon only needs one color, chosen for contrast on that light surface.
  */
 export const SERVICE_ICONS = [
   { iconColor: COLORS.goldText, Icon: DesignWebIcon },

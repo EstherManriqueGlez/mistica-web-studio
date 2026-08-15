@@ -1,88 +1,123 @@
-import Sparkle from "../common/Sparkle";
+import { motion } from "framer-motion";
 import { COLORS, FONT_DISPLAY, FONT_SCRIPT } from "../../constants/colors";
 import { useLanguage } from "../../context/useLanguage";
+import { usePrefersReducedMotion } from "../../hooks/usePrefersReducedMotion";
+import heroVideo from "../../assets/hero-video.mp4";
+import heroPoster from "../../assets/hero-poster.jpg";
 
-export default function Hero() {
+const EASE = [0.22, 1, 0.36, 1];
+
+const container = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.15 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
+};
+
+/**
+ * Cinematic hero: full-screen background video (inspired by unseen.co),
+ * with a dark pine-toned scrim so the text stays legible no matter which
+ * video frame is showing. Content only enters once `revealed` is true,
+ * so the animation stays synced with the moment the intro curtain opens
+ * instead of firing (and finishing) while that curtain still covers
+ * everything.
+ */
+export default function Hero({ revealed = true }) {
   const { t } = useLanguage();
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <section
       id="inicio"
-      className="relative overflow-hidden pt-40 pb-28 md:pt-52 md:pb-36 px-6"
+      className="relative min-h-[100svh] flex items-center overflow-hidden"
+      style={{ background: COLORS.pineDeep }}
     >
-      <Sparkle
-        className="absolute top-28 right-[8%] w-10 h-10 md:w-14 md:h-14"
-        size={56}
-        color={COLORS.gold}
-      />
-      <Sparkle
-        className="absolute top-[52%] left-[6%] w-6 h-6 md:w-8 md:h-8"
-        size={32}
-        color={COLORS.turquoise}
-        delay={1.4}
-      />
-      <Sparkle
-        className="absolute bottom-16 right-[18%] w-5 h-5"
-        size={20}
-        color={COLORS.pine}
-        delay={0.6}
-      />
-
-      {/* hilo místico, un guiño al trazo de la M del logo */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        viewBox="0 0 1200 700"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          className="mws-thread"
-          d="M -50 620 C 150 500, 220 300, 340 160 C 400 90, 460 90, 500 200 C 540 320, 560 480, 620 380 C 680 280, 700 80, 780 60 C 900 30, 1050 140, 1260 90"
-          stroke={COLORS.gold}
-          strokeWidth="2"
-          fill="none"
-          strokeLinecap="round"
-          opacity="0.55"
+      <div className="absolute inset-0">
+        {prefersReducedMotion ? (
+          <img
+            src={heroPoster}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        ) : (
+          <video
+            className="absolute inset-0 h-full w-full object-cover"
+            src={heroVideo}
+            poster={heroPoster}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            aria-hidden="true"
+          />
+        )}
+        {/* Scrim: guarantees text contrast no matter the video frame,
+            and gives it the brand's pine/gold patina. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(180deg, rgba(11,38,36,0.78) 0%, rgba(11,38,36,0.55) 45%, rgba(11,38,36,0.88) 100%)`,
+          }}
         />
-      </svg>
+        <div
+          className="absolute inset-0 mix-blend-multiply opacity-60"
+          style={{
+            background: `radial-gradient(120% 90% at 50% 10%, ${COLORS.pine} 0%, ${COLORS.pineDeep} 70%)`,
+          }}
+        />
+      </div>
 
-      <div className="relative max-w-4xl mx-auto text-center">
-        <p
+      <motion.div
+        className="relative z-10 max-w-4xl mx-auto text-center px-6 py-32 md:py-40"
+        variants={container}
+        initial="hidden"
+        animate={revealed ? "visible" : "hidden"}
+      >
+        <motion.p
+          variants={item}
           className="text-2xl md:text-3xl mb-4"
-          style={{ fontFamily: FONT_SCRIPT, color: COLORS.turquoiseDeep }}
+          style={{ fontFamily: FONT_SCRIPT, color: COLORS.turquoiseLight }}
         >
           {t.hero.eyebrow}
-        </p>
+        </motion.p>
 
-        <h1
+        <motion.h1
+          variants={item}
           className="text-[2.6rem] leading-[1.08] md:text-7xl md:leading-[1.05] font-medium tracking-tight"
-          style={{ fontFamily: FONT_DISPLAY, color: COLORS.pine }}
+          style={{ fontFamily: FONT_DISPLAY, color: COLORS.cream }}
         >
           {t.hero.titleLine1}
           <br className="hidden md:block" />
           {t.hero.titleConnector}{" "}
-          <span style={{ color: COLORS.goldText }}>
+          <span style={{ color: COLORS.goldLight }}>
             {t.hero.titleHighlight}
           </span>{" "}
           {t.hero.titleSuffix}
-        </h1>
+        </motion.h1>
 
-        <p
+        <motion.p
+          variants={item}
           className="mt-8 max-w-xl mx-auto text-base md:text-lg leading-relaxed"
-          style={{ color: COLORS.pine, opacity: 0.82 }}
+          style={{ color: COLORS.cream, opacity: 0.85 }}
         >
           {t.hero.paragraph}
-        </p>
+        </motion.p>
 
-        <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <motion.div
+          variants={item}
+          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
           <a
             href="#contacto"
             className="mws-btn-primary rounded-full px-9 py-4 font-medium text-[15px] tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             style={{
-              background: COLORS.pine,
-              color: COLORS.cream,
-              outlineColor: COLORS.gold,
+              background: COLORS.gold,
+              color: COLORS.pineDeep,
+              outlineColor: COLORS.cream,
             }}
           >
             {t.hero.ctaPrimary}
@@ -90,17 +125,56 @@ export default function Hero() {
 
           <a
             href="#servicios"
-            className="mws-btn-ghost rounded-full px-9 py-4 font-medium hover:bg-pine hover:text-cream text-[15px] tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="rounded-full px-9 py-4 font-medium text-[15px] tracking-wide transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             style={{
-              border: `1.5px solid ${COLORS.pine}`,
-              color: COLORS.pine,
+              border: `1.5px solid ${COLORS.cream}`,
+              color: COLORS.cream,
               outlineColor: COLORS.gold,
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = COLORS.cream;
+              e.currentTarget.style.color = COLORS.pineDeep;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = COLORS.cream;
             }}
           >
             {t.hero.ctaSecondary}
           </a>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
+
+      <motion.div
+        className="absolute bottom-8 inset-x-0 flex justify-center z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: revealed ? 0.75 : 0 }}
+        transition={{ duration: 0.8, delay: 0.9 }}
+      >
+        <svg
+          width="20"
+          height="28"
+          viewBox="0 0 20 28"
+          fill="none"
+          aria-hidden="true"
+          style={
+            prefersReducedMotion
+              ? undefined
+              : { animation: "mws-bounce 1.8s ease-in-out infinite" }
+          }
+        >
+          <rect
+            x="1"
+            y="1"
+            width="18"
+            height="26"
+            rx="9"
+            stroke={COLORS.cream}
+            strokeWidth="1.3"
+          />
+          <circle cx="10" cy="9" r="2" fill={COLORS.goldLight} />
+        </svg>
+      </motion.div>
     </section>
   );
 }

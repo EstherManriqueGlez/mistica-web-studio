@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
-// Objeto de contexto puro, sin componentes, en su propio archivo:
-// así LanguageContext.jsx (el Provider) y useLanguage.js (el hook)
-// pueden seguir exportando solo un componente / solo un hook cada uno,
-// que es lo que exige la regla de Fast Refresh de Vite.
+// Plain context object, no components, in its own file: this lets
+// LanguageContext.jsx (the Provider) and useLanguage.js (the hook)
+// each keep exporting only a component / only a hook, which is what
+// Vite's Fast Refresh rule requires.
 export const LanguageContext = createContext(null);

@@ -1,3 +1,4 @@
+import DrawnMMark from "../common/DrawnMMark";
 import { COLORS, FONT_DISPLAY, FONT_SCRIPT } from "../../constants/colors";
 import { FOOTER_LINKS } from "../../constants/navigation";
 import { useLanguage } from "../../context/useLanguage";
@@ -81,6 +82,15 @@ export default function Footer() {
               <li>{t.footer.addressLine}</li>
             </ul>
           </div>
+        </div>
+
+        {/* Drawn brand mark (see DrawnMMark.jsx): lg+ only, per Dian's
+            request — small screens skip it entirely rather than showing
+            a shrunk version. Sized to match the contact list's height
+            (158px) so it reads as a natural fourth "column" alongside
+            it, without needing its own heading. */}
+        <div className="hidden lg:flex lg:items-center lg:justify-center">
+          <DrawnMMark className="h-[158px]" />
         </div>
       </div>
 

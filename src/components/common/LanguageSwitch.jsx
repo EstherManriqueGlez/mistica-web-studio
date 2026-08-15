@@ -2,11 +2,11 @@ import { useLanguage } from "../../context/useLanguage";
 import { COLORS } from "../../constants/colors";
 
 /**
- * Selector de idioma EN / ES. Se implementa como un grupo de dos botones
- * (no como un <input type="checkbox"> "switch") porque estamos eligiendo
- * entre dos opciones con nombre propio, no encendiendo/apagando algo:
- * un grupo de botones con aria-pressed es más claro para lectores de
- * pantalla que un switch binario sin etiquetas visibles.
+ * EN / ES language selector. Implemented as a group of two buttons
+ * (not an <input type="checkbox"> "switch") because we're choosing
+ * between two named options, not toggling something on/off: a button
+ * group with aria-pressed is clearer for screen reader users than a
+ * binary switch with no visible labels.
  */
 export default function LanguageSwitch({ className = "" }) {
   const { lang, setLang, t } = useLanguage();

@@ -1,7 +1,7 @@
 /**
- * Diccionarios de traducción del sitio.
- * Idioma por defecto: inglés ("en"). El usuario puede cambiar a español ("es")
- * desde el switch de idioma en el header (ver src/context/LanguageContext.jsx).
+ * The site's translation dictionaries.
+ * Default language: English ("en"). The user can switch to Spanish ("es")
+ * via the language switch in the header (see src/context/LanguageContext.jsx).
  */
 
 export const LANGUAGES = ["en", "es"];
@@ -16,6 +16,11 @@ export const translations = {
     },
     skip: {
       toContent: "Skip to main content",
+    },
+    intro: {
+      tagline: "Strategy with soul",
+      scrollHint: "Scroll to enter",
+      skipIntro: "Skip intro and go to the site",
     },
     nav: {
       primaryLabel: "Main navigation",
@@ -156,6 +161,11 @@ export const translations = {
     },
     skip: {
       toContent: "Saltar al contenido principal",
+    },
+    intro: {
+      tagline: "Estrategia con alma",
+      scrollHint: "Desliza para entrar",
+      skipIntro: "Saltar intro e ir al sitio",
     },
     nav: {
       primaryLabel: "Navegación principal",
