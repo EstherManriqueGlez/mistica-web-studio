@@ -1,14 +1,17 @@
+/**
+ * Nav links store a `key` (not the label text) because the visible
+ * label depends on the active language (see src/i18n/translations.js
+ * and src/context/LanguageContext.jsx).
+ */
 export const NAV_LINKS = [
-  { href: "#quienes-somos", label: "Quiénes somos" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "#quienes-somos", key: "about" },
+  { href: "#servicios", key: "services" },
+  { href: "#contacto", key: "contact" },
 ];
 
 export const FOOTER_LINKS = [
-  { href: "#inicio", label: "Inicio" },
-  { href: "#quienes-somos", label: "Quiénes somos" },
-  { href: "#servicios", label: "Servicios" },
-  { href: "#contacto", label: "Contacto" },
+  { href: "#inicio", key: "home" },
+  { href: "#quienes-somos", key: "about" },
+  { href: "#servicios", key: "services" },
+  { href: "#contacto", key: "contact" },
 ];
-
-export const SOCIAL_LINKS = ["Instagram", "Behance", "LinkedIn"];
