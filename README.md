@@ -1,16 +1,83 @@
-# React + Vite
+# Mística Web Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A one-page corporate marketing website for **Mística Web Studio**, a web design and development studio based in Mexico City. The site presents the studio's brand and services, and captures leads through a fully functional contact form.
 
-Currently, two official plugins are available:
+Built with React, Vite, and Tailwind CSS, it pairs a cinematic, animation-rich experience with a strong focus on accessibility and performance.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Animated intro curtain** — full-screen brand reveal on load that respects `prefers-reduced-motion`.
+- **Cinematic video hero** — full-viewport background video with a static poster fallback.
+- **Brand showcase** — "Quiénes somos" section with a GSAP parallax of the studio's "M" mark (desktop only).
+- **Services grid** — five service cards with a scroll-triggered clip-path curtain effect.
+- **Working contact form** — client-side validation, hCaptcha, honeypot anti-bot protection, and delivery through the Web3Forms API.
+- **Bilingual (EN/ES)** — language switcher that persists the preference in `localStorage` and syncs SEO meta tags.
+- **Smooth motion** — Framer Motion for UI transitions and GSAP + ScrollTrigger for scroll-driven animations.
+- **Accessible by default** — skip-to-content link, `inert` during the intro, WCAG AA color palette, animated components disabled under reduced motion.
+- **SEO ready** — Open Graph, Twitter cards, JSON-LD structured data, and multilingual meta tags.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+| Technology | Purpose |
+|---|---|
+| [React](https://react.dev) 19 | UI framework |
+| [Vite](https://vite.dev) 8 | Build tool and dev server |
+| [Tailwind CSS](https://tailwindcss.com) v4 | Utility-first styling (`@tailwindcss/vite`) |
+| [Framer Motion](https://www.framer.com/motion/) | Component-level animations and transitions |
+| [GSAP](https://gsap.com) + ScrollTrigger | Scroll-driven effects: parallax, reveals, logo drawing |
+| [hCaptcha](https://www.hcaptcha.com) | Contact form bot protection |
+| [Web3Forms](https://web3forms.com) | Contact form backend (serverless) |
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Getting started
+
+**Prerequisites:** [Node.js](https://nodejs.org) and npm.
+
+```bash
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
+```
+
+## Available scripts
+
+| Script | Description |
+|---|---|
+| `npm run dev` | Start the Vite development server with HMR |
+| `npm run build` | Build the production bundle to `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint` | Lint the source with ESLint |
+
+## Project structure
+
+```
+src/
+├── assets/          # Images, video, and video poster
+├── components/
+│   ├── common/      # Sparkle, FadeUp, LanguageSwitch, DrawnMMark
+│   ├── icons/       # SVG service icons
+│   ├── layout/      # IntroCurtain, Header, Footer
+│   └── sections/    # Hero, About, Services, ServiceCard, Contact
+├── constants/       # Navigation, colors, and shared constants
+├── context/         # Language context
+├── hooks/           # Reduced motion, body scroll lock, reveal hooks
+├── i18n/            # EN/ES translation dictionaries
+├── lib/             # GSAP setup, parallax, and reveal utilities
+├── App.jsx
+├── index.css        # Tailwind entry + global styles
+└── main.jsx
+```
+
+The site is a single page navigated through anchor links:
+
+- `#inicio` — Hero
+- `#quienes-somos` — About
+- `#servicios` — Services
+- `#contacto` — Contact
+
+## Configuration
+
+- The default language is **English**; Spanish is available through the header switcher. The preference persists under `mws-lang` in `localStorage`.
+- The Web3Forms access key and hCaptcha site key live in `src/components/sections/Contact.jsx`. Replace them with production credentials as needed.
+- Static assets (favicons, Open Graph image, `robots.txt`, `sitemap.xml`) are served from `public/`.
